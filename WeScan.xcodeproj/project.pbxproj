@@ -13,6 +13,11 @@
 		383C441723C587B90070DE47 /* ReviewImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C441623C587B90070DE47 /* ReviewImageViewController.swift */; };
 		388A3BF423C46DAE00263DD1 /* NewCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A3BF323C46DAE00263DD1 /* NewCameraViewController.swift */; };
 		388A3BFD23C46FF000263DD1 /* EditImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A3BFC23C46FF000263DD1 /* EditImageViewController.swift */; };
+		4FDC253926186E8300F30AEB /* colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDC253826186E8300F30AEB /* colors.xcassets */; };
+		4FDC253D26186E9600F30AEB /* UIColor+Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDC253C26186E9600F30AEB /* UIColor+Colors.swift */; };
+		4FDC25592618711400F30AEB /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDC25562618711400F30AEB /* camera@2x.png */; };
+		4FDC255A2618711400F30AEB /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDC25572618711400F30AEB /* camera.png */; };
+		4FDC255B2618711400F30AEB /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDC25582618711400F30AEB /* camera@3x.png */; };
 		50FF76632577CCFB0099D918 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50FF764B2577CCFB0099D918 /* Localizable.strings */; };
 		50FF77162577EAD80099D918 /* WeScan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1D4BCED202C4F4100FCDDEC /* WeScan.framework */; };
 		74E27858215446C900361812 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E27850215446C200361812 /* FBSnapshotTestCase.framework */; };
@@ -190,14 +195,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		274DF35922D363BC0095CE49 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
-		32365A35257A39B500AAB6CD /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImagePropertyOrientation.swift; sourceTree = "<group>"; };
 		382D0B0223C348A800A81619 /* CameraScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScannerViewController.swift; sourceTree = "<group>"; };
 		383C440D23C5846B0070DE47 /* EditImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageViewController.swift; sourceTree = "<group>"; };
 		383C441623C587B90070DE47 /* ReviewImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewImageViewController.swift; sourceTree = "<group>"; };
 		388A3BF323C46DAE00263DD1 /* NewCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCameraViewController.swift; sourceTree = "<group>"; };
 		388A3BFC23C46FF000263DD1 /* EditImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageViewController.swift; sourceTree = "<group>"; };
+		4FDC253826186E8300F30AEB /* colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = colors.xcassets; sourceTree = "<group>"; };
+		4FDC253C26186E9600F30AEB /* UIColor+Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Colors.swift"; sourceTree = "<group>"; };
+		4FDC25562618711400F30AEB /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
+		4FDC25572618711400F30AEB /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		4FDC25582618711400F30AEB /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
 		50FF764C2577CCFB0099D918 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		50FF764D2577CCFB0099D918 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		50FF764E2577CCFB0099D918 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -323,6 +331,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FDC254B261870C600F30AEB /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				4FDC25572618711400F30AEB /* camera.png */,
+				4FDC25562618711400F30AEB /* camera@2x.png */,
+				4FDC25582618711400F30AEB /* camera@3x.png */,
+			);
+			name = Camera;
+			sourceTree = "<group>";
+		};
 		50FF76492577CCFB0099D918 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,6 +457,7 @@
 				50FF76492577CCFB0099D918 /* Resources */,
 				A1D4BCEF202C4F4100FCDDEC /* WeScan.h */,
 				A1D4BCF0202C4F4100FCDDEC /* Info.plist */,
+				4FDC253826186E8300F30AEB /* colors.xcassets */,
 			);
 			path = WeScan;
 			sourceTree = "<group>";
@@ -484,6 +503,7 @@
 				A1DF90F52037187500841A11 /* UIImage+Orientation.swift */,
 				8A1BB198249C9B45000278F2 /* UIImage+SFSymbol.swift */,
 				362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */,
+				4FDC253C26186E9600F30AEB /* UIColor+Colors.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -567,6 +587,7 @@
 		B94FBB9D2178647B001ED1B4 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				4FDC254B261870C600F30AEB /* Camera */,
 				B9E49DB421BFCE7A000E994D /* Rotate */,
 				B983380121A6CA4E00AAE307 /* Enhance */,
 				B9274D2D219AE10B00F9FCD1 /* Flash */,
@@ -617,7 +638,7 @@
 				A1D4BCB4202C4F3800FCDDEC /* Frameworks */,
 				A1D4BCB5202C4F3800FCDDEC /* Resources */,
 				A1D4BD07202C4F4100FCDDEC /* Embed Frameworks */,
-				503A25E422FB044C00534850 /* SwiftLint */,
+				4FB5560B2621963E000CCFDB /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -639,7 +660,7 @@
 				A1D4BCE9202C4F4100FCDDEC /* Frameworks */,
 				A1D4BCEA202C4F4100FCDDEC /* Headers */,
 				A1D4BCEB202C4F4100FCDDEC /* Resources */,
-				503A25EC22FB045E00534850 /* SwiftLint */,
+				4FB5560A2621962B000CCFDB /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -683,7 +704,7 @@
 					A1D4BCB6202C4F3800FCDDEC = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1020;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					A1D4BCEC202C4F4100FCDDEC = {
 						CreatedOnToolsVersion = 9.2;
@@ -820,16 +841,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDC255B2618711400F30AEB /* camera@3x.png in Resources */,
 				B9E49DC021BFD3BB000E994D /* rotate@3x.png in Resources */,
 				B9E49DBF21BFD3BB000E994D /* rotate@2x.png in Resources */,
 				50FF76632577CCFB0099D918 /* Localizable.strings in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
 				B94FBBAD2178652B001ED1B4 /* flash.png in Resources */,
+				4FDC253926186E8300F30AEB /* colors.xcassets in Resources */,
 				B94FBBAF2178652B001ED1B4 /* flash@2x.png in Resources */,
 				B940E38C21A77192003B3C0B /* enhance.png in Resources */,
 				B94FBBB32178653C001ED1B4 /* flashUnavailable@3x.png in Resources */,
 				B9E49DBE21BFD3BB000E994D /* rotate.png in Resources */,
 				B94FBBAE2178652B001ED1B4 /* flash@3x.png in Resources */,
+				4FDC255A2618711400F30AEB /* camera.png in Resources */,
+				4FDC25592618711400F30AEB /* camera@2x.png in Resources */,
 				B940E38A21A77192003B3C0B /* enhance@3x.png in Resources */,
 				B940E38B21A77192003B3C0B /* enhance@2x.png in Resources */,
 				B94FBBB42178653C001ED1B4 /* flashUnavailable.png in Resources */,
@@ -849,7 +874,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		503A25E422FB044C00534850 /* SwiftLint */ = {
+		4FB5560A2621962B000CCFDB /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -865,9 +890,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Submodules/WeTransfer-iOS-CI/SwiftLint/swiftlint.sh\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		503A25EC22FB045E00534850 /* SwiftLint */ = {
+		4FB5560B2621963E000CCFDB /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -883,7 +908,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Submodules/WeTransfer-iOS-CI/SwiftLint/swiftlint.sh\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -921,6 +946,7 @@
 				8A1BB199249C9B45000278F2 /* UIImage+SFSymbol.swift in Sources */,
 				B940E3DC21AE2A64003B3C0B /* CaptureSession+Flash.swift in Sources */,
 				A1D4BD15202C6CC000FCDDEC /* Array+Utils.swift in Sources */,
+				4FDC253D26186E9600F30AEB /* UIColor+Colors.swift in Sources */,
 				C3E2EB8E20B8970800A42E58 /* UIImage+Utils.swift in Sources */,
 				A165F67E2044741B002D5ED6 /* ShutterButton.swift in Sources */,
 				B940E3AD21A829EE003B3C0B /* CaptureSession+Orientation.swift in Sources */,
@@ -1029,30 +1055,6 @@
 				B97B49D5216C6FF600B2235B /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		B97B49CB216C6C6800B2235B /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B97B49CA216C6C6800B2235B /* en */,
-				4A644E2221A73C2B00B20839 /* fr */,
-				B940E3BD21AC2553003B3C0B /* pt-PT */,
-				B940E3C521AC2560003B3C0B /* it */,
-				B940E3C621AC2568003B3C0B /* zh-Hans */,
-				B940E3C721AC256E003B3C0B /* zh-Hant */,
-				9541C84122155DD3005FBCD3 /* de */,
-				82A414A022B9391B00DF5831 /* pt-BR */,
-				274DF35922D363BC0095CE49 /* hu */,
-				37DE11D92417FC8A0062E4E4 /* pl */,
-				75629CE3241664D2008777A5 /* es */,
-				75629CE4241664E0008777A5 /* es-419 */,
-				731898DA243A753C00EA7356 /* tr */,
-				D40239502448ADD60027CCFF /* ru */,
-				435B034F24D81FED006A1B04 /* cs */,
-				BD88FABF2514D8580049C41E /* ar */,
-				32365A35257A39B500AAB6CD /* ja */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1179,12 +1181,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MALCZZM8GL;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeTransfer.WeScanSampleProject;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.mwsd.WeTransfer.WeScanSampleProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1198,12 +1200,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MALCZZM8GL;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeTransfer.WeScanSampleProject;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.mwsd.WeTransfer.WeScanSampleProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

@@ -6,4 +6,10 @@
 //  Copyright © 2021 WeTransfer. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+extension UIColor {
+    class var cbsPurple: UIColor {
+        UIColor(red: 0.682, green: 0.051, blue: 0.502, alpha: 1)
+    }
+}
