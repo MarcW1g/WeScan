@@ -22,7 +22,7 @@ public enum ImageScannerControllerError: Error {
 }
 
 extension ImageScannerControllerError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
         case .authorization:

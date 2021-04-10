@@ -10,16 +10,16 @@ import XCTest
 @testable import WeScan
 
 final class FocusRectangleViewTests: XCTestCase {
-    
+
     func testFocusRectangleIsRemovedCorrectly() {
         let hostView = UIView()
         let session = CaptureSession.current
-        
+
         let focusRectangle = FocusRectangleView(touchPoint: CGPoint(x: 1, y: 1))
         hostView.addSubview(focusRectangle)
         session.removeFocusRectangleIfNeeded(focusRectangle, animated: false)
-        
+
         XCTAssertTrue(focusRectangle.superview == nil)
     }
-    
+
 }

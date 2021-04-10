@@ -12,33 +12,33 @@ import AVFoundation
 @testable import WeScan
 
 final class AVCaptureVideoOrientationTests: XCTestCase {
-  
+
   func testPortaitsMapToPortrait() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .portrait), .portrait)
   }
-  
+
   func testPortaitsUpsideDownMapToPortraitUpsideDown() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .portraitUpsideDown), .portraitUpsideDown)
   }
-  
+
   func testLandscapeLeftMapToLandscapeLeft() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .landscapeLeft), .landscapeLeft)
   }
-  
+
   func testLandscapeRightMapToLandscapeRight() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .landscapeRight), .landscapeRight)
   }
-  
+
   func testFaceUpMapToPortrait() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .faceUp), .portrait)
   }
-  
+
   func testFaceDownMapToPortraitUpsideDown() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .faceDown), .portraitUpsideDown)
   }
-  
+
   func testDefaultToPortrait() {
     XCTAssertEqual(AVCaptureVideoOrientation(deviceOrientation: .unknown), .portrait)
   }
-  
+
 }

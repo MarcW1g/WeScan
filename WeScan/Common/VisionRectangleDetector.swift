@@ -52,7 +52,7 @@ enum VisionRectangleDetector {
         }
 
     }
-	
+
     /// Detects rectangles from the given CVPixelBuffer/CVImageBuffer on iOS 11 and above.
     ///
     /// - Parameters:
@@ -66,7 +66,7 @@ enum VisionRectangleDetector {
             height: CGFloat(CVPixelBufferGetHeight(pixelBuffer)),
             completion: completion)
     }
-    
+
     /// Detects rectangles from the given image on iOS 11 and above.
     ///
     /// - Parameters:
@@ -78,7 +78,7 @@ enum VisionRectangleDetector {
             for: imageRequestHandler, width: image.extent.width,
             height: image.extent.height, completion: completion)
     }
-    
+
     static func rectangle(forImage image: CIImage, orientation: CGImagePropertyOrientation, completion: @escaping ((Quadrilateral?) -> Void)) {
         let imageRequestHandler = VNImageRequestHandler(ciImage: image, orientation: orientation, options: [:])
         let orientedImage = image.oriented(orientation)

@@ -11,38 +11,38 @@ import AVFoundation
 @testable import WeScan
 
 final class CaptureSessionTests: XCTestCase {
-    
+
     private let session = CaptureSession.current
-    
+
     func testAutoScanEnabledByDefault() {
         XCTAssertTrue(session.isAutoScanEnabled)
     }
-  
+
     func testEditOrientationUpByDefault() {
         XCTAssertEqual(session.editImageOrientation, CGImagePropertyOrientation.up)
     }
-    
+
     func testCaptureDeviceIsAvailable() {
         session.device = MockCaptureDevice()
         XCTAssertNotNil(session.device)
     }
-    
+
     func testCanToggleFlash() {
         session.device = MockCaptureDevice()
-        
+
         let state = session.toggleFlash()
         XCTAssertEqual(state, CaptureSession.FlashState.on)
     }
-    
+
     func testCanSetFocusPoint() {
         session.device = MockCaptureDevice()
         XCTAssertNoThrow(try session.setFocusPointToTapPoint(.zero))
     }
-    
+
     func testCanResetFocusToAuto() {
         session.device = MockCaptureDevice()
         XCTAssertNoThrow(try session.resetFocusToAuto())
         XCTAssertEqual(session.device?.focusMode, AVCaptureDevice.FocusMode.continuousAutoFocus)
     }
-    
+
 }

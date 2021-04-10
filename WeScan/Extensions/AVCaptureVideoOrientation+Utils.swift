@@ -12,7 +12,7 @@ import CoreImage
 import UIKit
 
 extension AVCaptureVideoOrientation {
-    
+
     /// Maps UIDeviceOrientation to AVCaptureVideoOrientation
     init?(deviceOrientation: UIDeviceOrientation) {
         switch deviceOrientation {
@@ -32,5 +32,5 @@ extension AVCaptureVideoOrientation {
             self.init(rawValue: AVCaptureVideoOrientation.portrait.rawValue)
         }
     }
-    
+
 }
