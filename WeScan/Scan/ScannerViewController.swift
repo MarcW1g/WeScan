@@ -28,6 +28,9 @@ public final class ScannerViewController: UIViewController {
 
     /// The original bar style that was set by the host app
     private var originalBarStyle: UIBarStyle?
+    
+    /// Whether the popup is visible
+    private var tipsPopupVisible = false
 
     private lazy var shutterButton: ShutterButton = {
         let button = ShutterButton()
@@ -80,11 +83,24 @@ public final class ScannerViewController: UIViewController {
         return button
     }()
 
+    private lazy var infoButton: UIBarButtonItem = {
+        let infoImage = UIImage(named: "info", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        let button = UIBarButtonItem(image: infoImage, style: .plain, target: self, action: #selector(showInfoPopup))
+        button.tintColor = .white
+        return button
+    }()
+
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .gray)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
+    }()
+    
+    private lazy var tipsPopup: InfoPopupView = {
+        let popupView = InfoPopupView()
+        popupView.translatesAutoresizingMaskIntoConstraints = false
+        return popupView
     }()
 
     // MARK: - Life Cycle
@@ -152,6 +168,10 @@ public final class ScannerViewController: UIViewController {
 
         view.addSubview(shutterButton)
         view.addSubview(activityIndicator)
+        
+        tipsPopup.isHidden = true
+        tipsPopup.delegate = self
+        view.addSubview(tipsPopup)
 
         if UIImagePickerController.isFlashAvailable(for: .rear) == false {
             let flashOffImage = UIImage(systemName: "bolt.slash.fill", named: "flashUnavailable", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)
@@ -162,6 +182,7 @@ public final class ScannerViewController: UIViewController {
 
     private func setupNavigationBar() {
         navigationItem.setLeftBarButton(cancelButton, animated: false)
+        navigationItem.setRightBarButton(infoButton, animated: false)
     }
 
     private func setupConstraints() {
@@ -170,7 +191,8 @@ public final class ScannerViewController: UIViewController {
         var autoScanButtonConstraints = [NSLayoutConstraint]()
         var shutterButtonConstraints = [NSLayoutConstraint]()
         var activityIndicatorConstraints = [NSLayoutConstraint]()
-
+        var tipsPopupConstraints = [NSLayoutConstraint]()
+        
         quadViewConstraints = [
             quadView.topAnchor.constraint(equalTo: view.topAnchor),
             view.bottomAnchor.constraint(equalTo: quadView.bottomAnchor),
@@ -203,6 +225,13 @@ public final class ScannerViewController: UIViewController {
             flashButton.leadingAnchor.constraint(equalTo: shutterButton.trailingAnchor, constant: 10)
         ]
 
+        tipsPopupConstraints = [
+            tipsPopup.topAnchor.constraint(equalTo: view.topAnchor),
+            tipsPopup.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tipsPopup.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tipsPopup.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+
         if #available(iOS 11.0, *) {
             let shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
             shutterButtonConstraints.append(shutterButtonBottomConstraint)
@@ -211,7 +240,7 @@ public final class ScannerViewController: UIViewController {
             shutterButtonConstraints.append(shutterButtonBottomConstraint)
         }
 
-        NSLayoutConstraint.activate(quadViewConstraints + shutterButtonConstraints + activityIndicatorConstraints + autoScanButtonConstraints + flashButtonConstraints)
+        NSLayoutConstraint.activate(quadViewConstraints + shutterButtonConstraints + activityIndicatorConstraints + autoScanButtonConstraints + flashButtonConstraints + tipsPopupConstraints)
     }
 
     // MARK: - Tap to Focus
@@ -316,7 +345,33 @@ public final class ScannerViewController: UIViewController {
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
     }
-
+    
+    @objc private func showInfoPopup() {
+        if tipsPopupVisible {
+            hidePopup()
+        } else {
+            showPopup()
+        }
+    }
+    
+    private func showPopup() {
+        tipsPopup.alpha = 0
+        tipsPopup.isHidden = false
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
+            self?.tipsPopup.alpha = 1
+        } completion: { [weak self] (completed) in
+            self?.tipsPopupVisible = completed
+        }
+    }
+    
+    private func hidePopup() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
+            self?.tipsPopup.alpha = 0
+        } completion: { [weak self] (completed) in
+            self?.tipsPopup.isHidden = true
+            self?.tipsPopupVisible = !completed
+        }
+    }
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
@@ -369,4 +424,10 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
     }
 
+}
+
+extension ScannerViewController: InfoPopupViewProtocol {
+    public func hideInfoPopup() {
+        hidePopup()
+    }
 }
