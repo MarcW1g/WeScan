@@ -25,24 +25,45 @@ final class ReviewViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-
-    private lazy var enhanceButton: UIBarButtonItem = {
-        let image = UIImage(systemName: "wand.and.rays.inverse", named: "enhance", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)
-        let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(toggleEnhancedImage))
-        button.tintColor = .white
+    
+    private lazy var enhanceButton: UIButton = {
+        let image = UIImage(
+            named: "enhance",
+            in: Bundle(for: ScannerViewController.self),
+            compatibleWith: nil
+        )?.withRenderingMode(.alwaysTemplate)
+        
+        let button = UIButton()
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(toggleEnhancedImage), for: .touchUpInside)
+        button.tintColor = .cbsPurple
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
-    private lazy var rotateButton: UIBarButtonItem = {
-        let image = UIImage(systemName: "rotate.right", named: "rotate", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)
-        let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(rotateImage))
-        button.tintColor = .white
+    
+    private lazy var rotateButton: UIButton = {
+        let image = UIImage(
+            named: "rotate",
+            in: Bundle(for: ScannerViewController.self),
+            compatibleWith: nil
+        )?.withRenderingMode(.alwaysTemplate)
+        let button = UIButton()
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(rotateImage), for: .touchUpInside)
+        button.tintColor = .cbsPurple
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
-    private lazy var doneButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishScan))
-        button.tintColor = navigationController?.navigationBar.tintColor
+    
+    private lazy var doneButton: CircularImageButton = {
+        let button = CircularImageButton(
+            image: UIImage(
+                named: "checkmark",
+                in: Bundle(for: ScannerViewController.self),
+                compatibleWith: nil
+            )?.withRenderingMode(.alwaysTemplate))
+        button.addTarget(self, action: #selector(finishScan), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -65,47 +86,51 @@ final class ReviewViewController: UIViewController {
         enhancedImageIsAvailable = results.enhancedScan != nil
 
         setupViews()
-        setupToolbar()
         setupConstraints()
 
         title = NSLocalizedString("wescan.review.title", tableName: nil, bundle: Bundle(for: ReviewViewController.self), value: "Review", comment: "The review title of the ReviewController")
-        navigationItem.rightBarButtonItem = doneButton
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        // We only show the toolbar (with the enhance button) if the enhanced image is available.
-        if enhancedImageIsAvailable {
-            navigationController?.setToolbarHidden(false, animated: true)
-        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setToolbarHidden(true, animated: true)
     }
 
     // MARK: Setups
 
     private func setupViews() {
         view.addSubview(imageView)
+        view.addSubview(doneButton)
+        view.addSubview(rotateButton)
+        
+        if enhancedImageIsAvailable {
+            view.addSubview(enhanceButton)
+        }
     }
-
-    private func setupToolbar() {
-        guard enhancedImageIsAvailable else { return }
-
-        navigationController?.toolbar.barStyle = .blackTranslucent
-
-        let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbarItems = [fixedSpace, enhanceButton, flexibleSpace, rotateButton, fixedSpace]
-    }
-
+    
     private func setupConstraints() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         var imageViewConstraints: [NSLayoutConstraint] = []
+        var doneButtonConstraints: [NSLayoutConstraint] = []
+        var rotateButtonConstraints: [NSLayoutConstraint] = []
+        
+        doneButtonConstraints = [
+            doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            doneButton.widthAnchor.constraint(equalToConstant: 65.0),
+            doneButton.heightAnchor.constraint(equalToConstant: 65.0)
+        ]
+        
+        rotateButtonConstraints = [
+            rotateButton.centerYAnchor.constraint(equalTo: doneButton.centerYAnchor),
+            rotateButton.trailingAnchor.constraint(equalTo: doneButton.leadingAnchor, constant: -8),
+            rotateButton.widthAnchor.constraint(equalTo: doneButton.widthAnchor),
+            rotateButton.heightAnchor.constraint(equalTo: doneButton.heightAnchor)
+        ]
+        
         if #available(iOS 11.0, *) {
             imageViewConstraints = [
                 view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: imageView.safeAreaLayoutGuide.topAnchor),
@@ -113,6 +138,12 @@ final class ReviewViewController: UIViewController {
                 view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: imageView.safeAreaLayoutGuide.bottomAnchor),
                 view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: imageView.safeAreaLayoutGuide.leadingAnchor)
             ]
+            
+            let doneButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(
+                equalTo: doneButton.bottomAnchor,
+                constant: 8.0
+            )
+            doneButtonConstraints.append(doneButtonBottomConstraint)
         } else {
             imageViewConstraints = [
                 view.topAnchor.constraint(equalTo: imageView.topAnchor),
@@ -120,9 +151,25 @@ final class ReviewViewController: UIViewController {
                 view.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
                 view.leadingAnchor.constraint(equalTo: imageView.leadingAnchor)
             ]
+            
+            let doneButtonBottomConstraint = view.bottomAnchor.constraint(
+                equalTo: doneButton.bottomAnchor,
+                constant: 8.0
+            )
+            doneButtonConstraints.append(doneButtonBottomConstraint)
         }
 
-        NSLayoutConstraint.activate(imageViewConstraints)
+        NSLayoutConstraint.activate(imageViewConstraints + doneButtonConstraints + rotateButtonConstraints)
+        
+        if enhancedImageIsAvailable {
+            var enhanceButtonConstraints: [NSLayoutConstraint] = [
+                enhanceButton.centerYAnchor.constraint(equalTo: doneButton.centerYAnchor),
+                enhanceButton.leadingAnchor.constraint(equalTo: doneButton.trailingAnchor, constant: 8),
+                enhanceButton.widthAnchor.constraint(equalTo: doneButton.widthAnchor),
+                enhanceButton.heightAnchor.constraint(equalTo: doneButton.heightAnchor)
+            ]
+            NSLayoutConstraint.activate(enhanceButtonConstraints)
+        }
     }
 
     // MARK: - Actions
@@ -144,7 +191,7 @@ final class ReviewViewController: UIViewController {
         if isCurrentlyDisplayingEnhancedImage {
             enhanceButton.tintColor = .yellow
         } else {
-            enhanceButton.tintColor = .white
+            enhanceButton.tintColor = .cbsPurple
         }
     }
 
@@ -165,7 +212,10 @@ final class ReviewViewController: UIViewController {
         newResults.croppedScan.rotate(by: rotationAngle)
         newResults.enhancedScan?.rotate(by: rotationAngle)
         newResults.doesUserPreferEnhancedScan = isCurrentlyDisplayingEnhancedImage
-        imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFinishScanningWithResults: newResults)
+        imageScannerController.imageScannerDelegate?.imageScannerController(
+            imageScannerController,
+            didFinishScanningWithResults: newResults
+        )
     }
 
 }

@@ -30,15 +30,26 @@ final class EditScanViewController: UIViewController {
         return quadView
     }()
 
-    private lazy var nextButton: UIBarButtonItem = {
-        let title = NSLocalizedString("wescan.edit.button.next", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Next", comment: "A generic next button")
-        let button = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(pushReviewController))
-        button.tintColor = navigationController?.navigationBar.tintColor
+    private lazy var nextButton: CircularImageButton = {
+        let button = CircularImageButton(
+            image: UIImage(
+                named: "checkmark",
+                in: Bundle(for: ScannerViewController.self),
+                compatibleWith: nil
+            )?.withRenderingMode(.alwaysTemplate))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(pushReviewController), for: .touchUpInside)
         return button
     }()
 
     private lazy var cancelButton: UIBarButtonItem = {
-        let title = NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Cancel", comment: "A generic cancel button")
+        let title = NSLocalizedString(
+            "wescan.scanning.cancel",
+            tableName: nil,
+            bundle: Bundle(for: EditScanViewController.self),
+            value: "Cancel",
+            comment: "A generic cancel button"
+        )
         let button = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(cancelButtonTapped))
         button.tintColor = navigationController?.navigationBar.tintColor
         return button
@@ -46,27 +57,56 @@ final class EditScanViewController: UIViewController {
 
     private lazy var onlyContentMessageLabelView: UIView = {
         let messageLabelView = UIView()
-        messageLabelView.backgroundColor = UIColor.cbsPurple.withAlphaComponent(0.8)
-        messageLabelView.layer.cornerRadius = 10
+        messageLabelView.backgroundColor = UIColor.white
+        messageLabelView.layer.cornerRadius = 5
         messageLabelView.translatesAutoresizingMaskIntoConstraints = false
 
         let messageLabel = UILabel()
         messageLabel.text = "Only select the area with the products and total price"
-        messageLabel.textColor = .white
+        messageLabel.textColor = .darkBlue
         messageLabel.textAlignment = .center
         messageLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         messageLabel.numberOfLines = 0
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         messageLabelView.addSubview(messageLabel)
 
+        let closeIcon = UIImage(
+            named: "close",
+            in: Bundle(for: ScannerViewController.self),
+            compatibleWith: nil
+        )?.withRenderingMode(.alwaysTemplate)
+        let closeIconImageView = UIImageView(image: closeIcon)
+        closeIconImageView.tintColor = .systemGray
+        closeIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        messageLabelView.addSubview(closeIconImageView)
+
+        let closeButton = UIButton()
+        closeButton.addTarget(self, action: #selector(closePopup), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        messageLabelView.addSubview(closeButton)
+
         let messageLabelConstraints = [
-            messageLabel.leadingAnchor.constraint(equalTo: messageLabelView.leadingAnchor, constant: 8),
+            messageLabel.leadingAnchor.constraint(equalTo: messageLabelView.leadingAnchor, constant: 20),
             messageLabel.topAnchor.constraint(equalTo: messageLabelView.topAnchor, constant: 8),
-            messageLabel.trailingAnchor.constraint(equalTo: messageLabelView.trailingAnchor, constant: -8),
+            messageLabel.trailingAnchor.constraint(equalTo: messageLabelView.trailingAnchor, constant: -20),
             messageLabel.bottomAnchor.constraint(equalTo: messageLabelView.bottomAnchor, constant: -8)
         ]
 
-        NSLayoutConstraint.activate(messageLabelConstraints)
+        let closeIconImageViewConstraints = [
+            closeIconImageView.topAnchor.constraint(equalTo: messageLabelView.topAnchor, constant: 4),
+            closeIconImageView.trailingAnchor.constraint(equalTo: messageLabelView.trailingAnchor, constant: -4),
+            closeIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            closeIconImageView.heightAnchor.constraint(equalToConstant: 20)
+        ]
+
+        let closeButtonConstraints = [
+            closeButton.topAnchor.constraint(equalTo: messageLabelView.topAnchor, constant: 0),
+            closeButton.trailingAnchor.constraint(equalTo: messageLabelView.trailingAnchor, constant: 0),
+            closeButton.bottomAnchor.constraint(equalTo: messageLabelView.centerYAnchor, constant: 0),
+            closeButton.widthAnchor.constraint(equalToConstant: 60)
+        ]
+
+        NSLayoutConstraint.activate(messageLabelConstraints + closeIconImageViewConstraints + closeButtonConstraints)
 
         return messageLabelView
     }()
@@ -99,8 +139,13 @@ final class EditScanViewController: UIViewController {
 
         setupViews()
         setupConstraints()
-        title = NSLocalizedString("wescan.edit.title", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Edit Scan", comment: "The title of the EditScanViewController")
-        navigationItem.rightBarButtonItem = nextButton
+        title = NSLocalizedString(
+            "wescan.edit.title",
+            tableName: nil,
+            bundle: Bundle(for: EditScanViewController.self),
+            value: "Edit Scan",
+            comment: "The title of the EditScanViewController"
+        )
         if let firstVC = self.navigationController?.viewControllers.first, firstVC == self {
             navigationItem.leftBarButtonItem = cancelButton
         } else {
@@ -109,7 +154,11 @@ final class EditScanViewController: UIViewController {
 
         zoomGestureController = ZoomGestureController(image: image, quadView: quadView)
 
-        let touchDown = UILongPressGestureRecognizer(target: zoomGestureController, action: #selector(zoomGestureController.handle(pan:)))
+        let touchDown = UILongPressGestureRecognizer(
+            target: zoomGestureController,
+            action: #selector(zoomGestureController.handle(pan:))
+        )
+        touchDown.delegate = self
         touchDown.minimumPressDuration = 0
         view.addGestureRecognizer(touchDown)
     }
@@ -123,7 +172,8 @@ final class EditScanViewController: UIViewController {
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        // Work around for an iOS 11.2 bug where UIBarButtonItems don't get back to their normal state after being pressed.
+        // Work around for an iOS 11.2 bug where UIBarButtonItems
+        // don't get back to their normal state after being pressed.
         navigationController?.navigationBar.tintAdjustmentMode = .normal
         navigationController?.navigationBar.tintAdjustmentMode = .automatic
     }
@@ -134,6 +184,7 @@ final class EditScanViewController: UIViewController {
         view.addSubview(imageView)
         view.addSubview(quadView)
         view.addSubview(onlyContentMessageLabelView)
+        view.addSubview(nextButton)
     }
 
     private func setupConstraints() {
@@ -154,22 +205,54 @@ final class EditScanViewController: UIViewController {
             quadViewHeightConstraint
         ]
 
+        var nextButtonConstraints = [
+            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nextButton.widthAnchor.constraint(equalToConstant: 65.0),
+            nextButton.heightAnchor.constraint(equalToConstant: 65.0)
+        ]
+
         let onlyContentMessageLabelViewConstraints: [NSLayoutConstraint]
         if #available(iOS 11.0, *) {
             onlyContentMessageLabelViewConstraints = [
-                onlyContentMessageLabelView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-                onlyContentMessageLabelView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
-                onlyContentMessageLabelView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8)
+                onlyContentMessageLabelView.topAnchor.constraint(
+                    equalTo: view.safeAreaLayoutGuide.topAnchor,
+                    constant: 8
+                ),
+                onlyContentMessageLabelView.leadingAnchor.constraint(
+                    equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                    constant: 8
+                ),
+                onlyContentMessageLabelView.trailingAnchor.constraint(
+                    equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -8
+                )
             ]
+
+            let nextButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(
+                equalTo: nextButton.bottomAnchor,
+                constant: 8.0
+            )
+            nextButtonConstraints.append(nextButtonBottomConstraint)
         } else {
             onlyContentMessageLabelViewConstraints = [
                 onlyContentMessageLabelView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
                 onlyContentMessageLabelView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
                 onlyContentMessageLabelView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
             ]
+
+            let nextButtonBottomConstraint = view.bottomAnchor.constraint(
+                equalTo: nextButton.bottomAnchor,
+                constant: 8.0
+            )
+            nextButtonConstraints.append(nextButtonBottomConstraint)
         }
 
-        NSLayoutConstraint.activate(quadViewConstraints + imageViewConstraints + onlyContentMessageLabelViewConstraints)
+        NSLayoutConstraint.activate(
+            quadViewConstraints +
+                imageViewConstraints +
+                onlyContentMessageLabelViewConstraints +
+                nextButtonConstraints
+        )
     }
 
     // MARK: - Actions
@@ -184,7 +267,9 @@ final class EditScanViewController: UIViewController {
             let ciImage = CIImage(image: image) else {
                 if let imageScannerController = navigationController as? ImageScannerController {
                     let error = ImageScannerControllerError.ciImageCreation
-                    imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
+                    imageScannerController.imageScannerDelegate?.imageScannerController(
+                        imageScannerController, didFailWithError: error
+                    )
                 }
                 return
         }
@@ -209,7 +294,12 @@ final class EditScanViewController: UIViewController {
         let enhancedImage = filteredImage.applyingAdaptiveThreshold()?.withFixedOrientation()
         let enhancedScan = enhancedImage.flatMap { ImageScannerScan(image: $0) }
 
-        let results = ImageScannerResults(detectedRectangle: scaledQuad, originalScan: ImageScannerScan(image: image), croppedScan: ImageScannerScan(image: croppedImage), enhancedScan: enhancedScan)
+        let results = ImageScannerResults(
+            detectedRectangle: scaledQuad,
+            originalScan: ImageScannerScan(image: image),
+            croppedScan: ImageScannerScan(image: croppedImage),
+            enhancedScan: enhancedScan
+        )
 
         let reviewViewController = ReviewViewController(results: results)
         navigationController?.pushViewController(reviewViewController, animated: true)
@@ -217,7 +307,10 @@ final class EditScanViewController: UIViewController {
 
     private func displayQuad() {
         let imageSize = image.size
-        let imageFrame = CGRect(origin: quadView.frame.origin, size: CGSize(width: quadViewWidthConstraint.constant, height: quadViewHeightConstraint.constant))
+        let imageFrame = CGRect(
+            origin: quadView.frame.origin,
+            size: CGSize(width: quadViewWidthConstraint.constant, height: quadViewHeightConstraint.constant)
+        )
 
         let scaleTransform = CGAffineTransform.scaleTransform(forSize: imageSize, aspectFillInSize: imageFrame.size)
         let transforms = [scaleTransform]
@@ -227,7 +320,8 @@ final class EditScanViewController: UIViewController {
     }
 
     /// The quadView should be lined up on top of the actual image displayed by the imageView.
-    /// Since there is no way to know the size of that image before run time, we adjust the constraints to make sure that the quadView is on top of the displayed image.
+    /// Since there is no way to know the size of that image before run time,
+    /// we adjust the constraints to make sure that the quadView is on top of the displayed image.
     private func adjustQuadViewConstraints() {
         let frame = AVMakeRect(aspectRatio: image.size, insideRect: imageView.bounds)
         quadViewWidthConstraint.constant = frame.size.width
@@ -246,4 +340,25 @@ final class EditScanViewController: UIViewController {
         return quad
     }
 
+    // MARK: - Actions
+    @objc private func closePopup() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) { [weak self] in
+            self?.onlyContentMessageLabelView.alpha = 0
+        } completion: { [weak self] (_) in
+            self?.onlyContentMessageLabelView.isHidden = true
+        }
+
+    }
+}
+
+extension EditScanViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+
+        if touch.view?.isDescendant(of: nextButton) ?? false ||
+            touch.view?.isDescendant(of: onlyContentMessageLabelView) ?? false {
+            return false
+        }
+
+        return true
+    }
 }

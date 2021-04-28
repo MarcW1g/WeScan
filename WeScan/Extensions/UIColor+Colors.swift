@@ -12,4 +12,8 @@ extension UIColor {
     class var cbsPurple: UIColor {
         UIColor(red: 0.682, green: 0.051, blue: 0.502, alpha: 1)
     }
+    
+    class var darkBlue: UIColor {
+        UIColor(red: 0.247, green: 0.286, blue: 0.408, alpha: 1)
+    }
 }

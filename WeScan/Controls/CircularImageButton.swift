@@ -9,8 +9,8 @@
 import UIKit
 
 class CircularImageButton: UIControl {
-    private let cameraImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "camera", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate))
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
         imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -31,9 +31,10 @@ class CircularImageButton: UIControl {
     }
 
     // MARK: - Life Cycle
-    
-    convenience init(image: UIImage) {
-        <#statements#>
+
+    convenience init(image: UIImage?) {
+        self.init(frame: .zero)
+        imageView.image = image
     }
 
     override init(frame: CGRect) {
@@ -77,7 +78,7 @@ class CircularImageButton: UIControl {
         animation.duration = isHighlighted ? 0.35 : 0.10
 
         innerCircleLayer.add(animation, forKey: "transform")
-        cameraImageView.layer.add(animation, forKey: "transform")
+        imageView.layer.add(animation, forKey: "transform")
         impactFeedbackGenerator.impactOccurred()
     }
 
@@ -91,12 +92,12 @@ class CircularImageButton: UIControl {
 
     // MARK: - Image
     private func addImage() {
-        addSubview(cameraImageView)
+        addSubview(imageView)
 
-        let leadingConstraint = NSLayoutConstraint(item: cameraImageView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 20)
-        let trailingConstraint = NSLayoutConstraint(item: cameraImageView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -20)
-        let topConstraint = NSLayoutConstraint(item: cameraImageView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 20)
-        let bottomConstraint = NSLayoutConstraint(item: cameraImageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -20)
+        let leadingConstraint = NSLayoutConstraint(item: imageView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 20)
+        let trailingConstraint = NSLayoutConstraint(item: imageView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -20)
+        let topConstraint = NSLayoutConstraint(item: imageView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 20)
+        let bottomConstraint = NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -20)
 
         addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
     }
