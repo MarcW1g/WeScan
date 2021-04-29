@@ -162,7 +162,7 @@ final class ReviewViewController: UIViewController {
         NSLayoutConstraint.activate(imageViewConstraints + doneButtonConstraints + rotateButtonConstraints)
         
         if enhancedImageIsAvailable {
-            var enhanceButtonConstraints: [NSLayoutConstraint] = [
+            let enhanceButtonConstraints: [NSLayoutConstraint] = [
                 enhanceButton.centerYAnchor.constraint(equalTo: doneButton.centerYAnchor),
                 enhanceButton.leadingAnchor.constraint(equalTo: doneButton.trailingAnchor, constant: 8),
                 enhanceButton.widthAnchor.constraint(equalTo: doneButton.widthAnchor),
