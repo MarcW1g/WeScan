@@ -31,6 +31,12 @@ public final class ScannerViewController: UIViewController {
     
     /// Whether the popup is visible
     private var tipsPopupVisible = false
+    
+    /// Store the state of the auto shutter when the popup opened
+    private var tipsSavedAutoShutterState = false
+    
+    /// The tips to show in the tips popup
+    private var tips: [String]?
 
     private lazy var shutterButton: ShutterButton = {
         let button = ShutterButton()
@@ -102,6 +108,12 @@ public final class ScannerViewController: UIViewController {
         popupView.translatesAutoresizingMaskIntoConstraints = false
         return popupView
     }()
+    
+    // MARK: - Initialisation
+    convenience init(tips: [String]?) {
+        self.init(nibName:nil, bundle:nil)
+        self.tips = tips
+    }
 
     // MARK: - Life Cycle
 
@@ -169,9 +181,12 @@ public final class ScannerViewController: UIViewController {
         view.addSubview(shutterButton)
         view.addSubview(activityIndicator)
         
-        tipsPopup.isHidden = true
-        tipsPopup.delegate = self
-        view.addSubview(tipsPopup)
+        if let tips = tips {
+            tipsPopup.isHidden = true
+            tipsPopup.delegate = self
+            view.addSubview(tipsPopup)
+            tipsPopup.setupWithTips(tips: tips)
+        }
 
         if UIImagePickerController.isFlashAvailable(for: .rear) == false {
             let flashOffImage = UIImage(systemName: "bolt.slash.fill", named: "flashUnavailable", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)
@@ -182,7 +197,10 @@ public final class ScannerViewController: UIViewController {
 
     private func setupNavigationBar() {
         navigationItem.setLeftBarButton(cancelButton, animated: false)
-        navigationItem.setRightBarButton(infoButton, animated: false)
+        
+        if tips != nil {
+            navigationItem.setRightBarButton(infoButton, animated: false)
+        }
     }
 
     private func setupConstraints() {
@@ -191,7 +209,6 @@ public final class ScannerViewController: UIViewController {
         var autoScanButtonConstraints = [NSLayoutConstraint]()
         var shutterButtonConstraints = [NSLayoutConstraint]()
         var activityIndicatorConstraints = [NSLayoutConstraint]()
-        var tipsPopupConstraints = [NSLayoutConstraint]()
         
         quadViewConstraints = [
             quadView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -224,14 +241,7 @@ public final class ScannerViewController: UIViewController {
             flashButton.widthAnchor.constraint(equalTo: shutterButton.widthAnchor),
             flashButton.leadingAnchor.constraint(equalTo: shutterButton.trailingAnchor, constant: 10)
         ]
-
-        tipsPopupConstraints = [
-            tipsPopup.topAnchor.constraint(equalTo: view.topAnchor),
-            tipsPopup.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tipsPopup.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tipsPopup.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
-
+        
         if #available(iOS 11.0, *) {
             let shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
             shutterButtonConstraints.append(shutterButtonBottomConstraint)
@@ -240,7 +250,18 @@ public final class ScannerViewController: UIViewController {
             shutterButtonConstraints.append(shutterButtonBottomConstraint)
         }
 
-        NSLayoutConstraint.activate(quadViewConstraints + shutterButtonConstraints + activityIndicatorConstraints + autoScanButtonConstraints + flashButtonConstraints + tipsPopupConstraints)
+        NSLayoutConstraint.activate(quadViewConstraints + shutterButtonConstraints + activityIndicatorConstraints + autoScanButtonConstraints + flashButtonConstraints)
+        
+        if tips != nil {
+            var tipsPopupConstraints = [NSLayoutConstraint]()
+            tipsPopupConstraints = [
+                tipsPopup.topAnchor.constraint(equalTo: view.topAnchor),
+                tipsPopup.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tipsPopup.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                tipsPopup.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ]
+            NSLayoutConstraint.activate(tipsPopupConstraints)
+        }
     }
 
     // MARK: - Tap to Focus
@@ -264,7 +285,8 @@ public final class ScannerViewController: UIViewController {
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
 
-        guard  let touch = touches.first else { return }
+        guard !tipsPopupVisible,
+              let touch = touches.first else { return }
         let touchPoint = touch.location(in: view)
         let convertedTouchPoint: CGPoint = videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: touchPoint)
 
@@ -355,6 +377,10 @@ public final class ScannerViewController: UIViewController {
     }
     
     private func showPopup() {
+        tipsSavedAutoShutterState = CaptureSession.current.isAutoScanEnabled
+        CaptureSession.current.isAutoScanEnabled = false
+        
+        view.bringSubviewToFront(tipsPopup)
         tipsPopup.alpha = 0
         tipsPopup.isHidden = false
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
@@ -365,6 +391,8 @@ public final class ScannerViewController: UIViewController {
     }
     
     private func hidePopup() {
+        CaptureSession.current.isAutoScanEnabled = tipsSavedAutoShutterState
+        
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
             self?.tipsPopup.alpha = 0
         } completion: { [weak self] (completed) in

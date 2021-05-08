@@ -122,7 +122,7 @@ final class HomeViewController: UIViewController {
     }
 
     func scanImage() {
-        let scannerViewController = ImageScannerController(delegate: self)
+        let scannerViewController = ImageScannerController(delegate: self, tips: ["Test1", "How about a new tip?"])
         scannerViewController.modalPresentationStyle = .fullScreen
 
         if #available(iOS 13.0, *) {
