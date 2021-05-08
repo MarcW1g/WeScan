@@ -103,18 +103,12 @@ class InfoPopupView: UIView {
         return stackView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupViews()
-    }
-    
     // MARK: - Setups
-    private func setupViews() {
+    public func setupWithTips(tips: [String]) {
+        setupViews(withTips: tips)
+    }
+    
+    private func setupViews(withTips tips: [String]) {
         backgroundColor = UIColor.black.withAlphaComponent(0.6)
         
         addSubview(tipsOverlay)
@@ -132,14 +126,7 @@ class InfoPopupView: UIView {
         
         setupConstraints()
         
-        addTips([
-            "Vermijd een witte achtergrond, ook als dit maar een klein stukje is.",
-            "Als een bon kreukels of vouwen heeft probeer hem dan zo plat mogelijk te maken.",
-            "Vermijd schaduwwerking in de scan.",
-            "Scan bij voorkeur bij daglicht.",
-            "Zorg dat de hoeken van de bon recht en vrij zijn.",
-            "Probeer de bon zo plat mogelijk te houden.",
-        ])
+        addTips(tips)
     }
     
     private func setupConstraints() {
@@ -171,7 +158,7 @@ class InfoPopupView: UIView {
         ]
         
         understoodButtonConstraints = [
-            understoodButton.bottomAnchor.constraint(equalTo: tipsOverlay.bottomAnchor, constant: -64),
+            understoodButton.bottomAnchor.constraint(equalTo: tipsOverlay.bottomAnchor, constant: -32),
             understoodButton.centerXAnchor.constraint(equalTo: tipsOverlay.centerXAnchor),
             understoodButton.heightAnchor.constraint(equalToConstant: 45),
             understoodButton.widthAnchor.constraint(equalToConstant: 175)

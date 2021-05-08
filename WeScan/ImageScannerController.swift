@@ -44,6 +44,9 @@ public final class ImageScannerController: UINavigationController {
 
     /// The object that acts as the delegate of the `ImageScannerController`.
     public weak var imageScannerDelegate: ImageScannerControllerDelegate?
+    
+    /// The tips to show in the tips popup
+    private var tips: [String]?
 
     // MARK: - Life Cycle
 
@@ -60,8 +63,10 @@ public final class ImageScannerController: UINavigationController {
         return .portrait
     }
 
-    public required init(image: UIImage? = nil, delegate: ImageScannerControllerDelegate? = nil) {
-        super.init(rootViewController: ScannerViewController())
+    public required init(image: UIImage? = nil, delegate: ImageScannerControllerDelegate? = nil, tips: [String]? = nil) {
+        super.init(rootViewController: ScannerViewController(tips: tips))
+        
+        self.tips = tips
 
         self.imageScannerDelegate = delegate
 
@@ -125,7 +130,7 @@ public final class ImageScannerController: UINavigationController {
     }
 
     public func resetScanner() {
-        setViewControllers([ScannerViewController()], animated: true)
+        setViewControllers([ScannerViewController(tips: tips)], animated: true)
     }
 
     private func setupConstraints() {
