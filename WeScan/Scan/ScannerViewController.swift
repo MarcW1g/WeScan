@@ -285,7 +285,8 @@ public final class ScannerViewController: UIViewController {
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
 
-        guard  let touch = touches.first else { return }
+        guard !tipsPopupVisible,
+              let touch = touches.first else { return }
         let touchPoint = touch.location(in: view)
         let convertedTouchPoint: CGPoint = videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: touchPoint)
 
@@ -376,6 +377,10 @@ public final class ScannerViewController: UIViewController {
     }
     
     private func showPopup() {
+        tipsSavedAutoShutterState = CaptureSession.current.isAutoScanEnabled
+        CaptureSession.current.isAutoScanEnabled = false
+        
+        view.bringSubviewToFront(tipsPopup)
         tipsPopup.alpha = 0
         tipsPopup.isHidden = false
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
@@ -386,6 +391,8 @@ public final class ScannerViewController: UIViewController {
     }
     
     private func hidePopup() {
+        CaptureSession.current.isAutoScanEnabled = tipsSavedAutoShutterState
+        
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) { [weak self] in
             self?.tipsPopup.alpha = 0
         } completion: { [weak self] (completed) in
